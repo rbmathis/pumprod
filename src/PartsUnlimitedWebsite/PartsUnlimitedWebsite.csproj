@@ -311,9 +311,6 @@
     <Content Include="Content\Account.css.map">
       <DependentUpon>Account.css</DependentUpon>
     </Content>
-    <Content Include="ApplicationInsights.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
@@ -322,7 +319,6 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
-    <Content Include="Connected Services\Application Insights\ConnectedService.json" />
     <None Include="Properties\PublishProfiles\partsunlimited-vcurrent.pubxml" />
     <None Include="Properties\PublishProfiles\partsunlimitedcus07.pubxml" />
     <Content Include="Images\admin_icon.png" />
@@ -457,7 +453,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\AppInsights.js" />
     <Content Include="Scripts\NewStoreArrivals.js" />
     <Content Include="Scripts\Recommendations.js" />
     <Content Include="Scripts\UI-Initialization.js" />
