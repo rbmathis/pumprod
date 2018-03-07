@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Caching;
 using System.Web.Mvc;
 using PartsUnlimited.Models;
+using PartsUnlimited.Utils;
 using PartsUnlimited.ViewModels;
 
 namespace PartsUnlimited.Controllers
@@ -23,18 +24,18 @@ namespace PartsUnlimited.Controllers
         public ActionResult Index()
         {
             // Get most popular products
-            var topSellingProducts = MemoryCache.Default["topselling"] as List<Product>;
+            var topSellingProducts = RedisHelper.GetList<Product>("topselling") as List<Product>;
             if (topSellingProducts == null)
             {
                 topSellingProducts = GetTopSellingProducts(4);
-                MemoryCache.Default.Add("topselling", topSellingProducts, new CacheItemPolicy { AbsoluteExpiration = DateTimeOffset.UtcNow.AddMinutes(10) });
+               RedisHelper.SetList<Product>("topselling", topSellingProducts);
             }
 
-            var newProducts = MemoryCache.Default["newarrivals"] as List<Product>;
+            var newProducts = RedisHelper.GetList<Product>("newarrivals") as List<Product>;
             if (newProducts == null)
             {
                 newProducts = GetNewProducts(4);
-                MemoryCache.Default.Add("newarrivals", newProducts, new CacheItemPolicy { AbsoluteExpiration = DateTimeOffset.UtcNow.AddMinutes(10) });
+                RedisHelper.SetList<Product>("newarrivals", newProducts);
             }
 
             var viewModel = new HomeViewModel

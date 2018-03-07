@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Azure.Search;
+using Microsoft.Azure.Search.Models;
 using PartsUnlimited.Models;
 
 namespace PartsUnlimited.ProductSearch
@@ -19,19 +22,34 @@ namespace PartsUnlimited.ProductSearch
 		// TODO: [EF] Change this to return List of ProductViewModel?
         public async Task<IEnumerable<Product>> Search(string query)
         {
-			try
+            List<Product> products = new List<Product>();
+            try
 			{
-				var cleanQuery = Depluralize(query);
+                SearchParameters parameters;  
+                DocumentSearchResult<Product> searchResults;
 
-				var q = _context.Products
-					.Where(p => p.Title.ToLower().Contains(cleanQuery));
+               parameters = new SearchParameters()
+                {
+                    Select = new[] { "ProductId", "SkuNumber", "CategoryId", "Title", "Price", "SalePrice", "ProductArtUrl", "Description", "ProductDetails", "Inventory", "LeadTime" }
+                };
 
-				return await q.ToListAsync();
+                //returns Azure search objects containing list of <T>
+                searchResults = CreateSearchIndexClient().Documents.Search<Product>(query, parameters);
+
+
+                
+                foreach (var r in searchResults.Results)
+                {
+                    products.Add(r.Document);
+                }
+                return products;
+
 			}
-			catch
+			catch(Exception ex)
 			{
-				return new List<Product>();
+				//eat it
 			}
+            return products;
         }
 
 		public string Depluralize(string query)
@@ -50,5 +68,17 @@ namespace PartsUnlimited.ProductSearch
 			}
 			return query.ToLowerInvariant();
 		}
-	}
+
+        private static SearchIndexClient CreateSearchIndexClient()
+        {
+            string searchServiceName = ConfigurationManager.AppSettings["SearchServiceName"];
+            string queryApiKey = ConfigurationManager.AppSettings["SearchServiceQueryApiKey"];
+            string indexName = ConfigurationManager.AppSettings["SearchServiceIndexName"];
+
+            SearchIndexClient indexClient = new SearchIndexClient(searchServiceName, indexName, new SearchCredentials(queryApiKey));
+            return indexClient;
+        }
+    }
 }
+
+

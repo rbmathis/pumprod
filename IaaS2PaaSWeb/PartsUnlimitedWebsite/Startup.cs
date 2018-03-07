@@ -1,5 +1,5 @@
 //TODO Application Insights - Uncomment
-//using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Owin;
 using Owin;
 using PartsUnlimited;
@@ -19,7 +19,7 @@ namespace PartsUnlimited
             ConfigureAuth(app);
 
             //TODO Application Insights - Uncomment
-            //TelemetryConfiguration.Active.InstrumentationKey = WebConfigurationManager.AppSettings["Keys:ApplicationInsights:InstrumentationKey"];
+            TelemetryConfiguration.Active.InstrumentationKey = WebConfigurationManager.AppSettings["Keys:ApplicationInsights:InstrumentationKey"];
 
         }
     }

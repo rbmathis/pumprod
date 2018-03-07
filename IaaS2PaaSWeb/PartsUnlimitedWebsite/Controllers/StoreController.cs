@@ -6,6 +6,7 @@ using System.Runtime.Caching;
 using System.Web.Mvc;
 using PartsUnlimited.Utils;
 using PartsUnlimited.ViewModels;
+using System.Collections.Generic;
 
 namespace PartsUnlimited.Controllers
 {
@@ -22,31 +23,42 @@ namespace PartsUnlimited.Controllers
         // GET: /Store/
         public ActionResult Index()
         {
-            var genres = db.Categories.ToList();
+            List<Category> genres = new List<Category>();
+            if (RedisHelper.GetList<Category>("categories") == null)
+            {
+                genres = db.Categories.ToList();
+                RedisHelper.SetList<Category>("categories", genres);
 
-            return View(genres);
+            }
+
+
+            return View(RedisHelper.GetList<Category>("categories"));
+            //return View(genres);
         }
 
-        //
-        // GET: /Store/Browse?genre=Disco
+        [OutputCache(Duration=500, VaryByParam="categoryId")]
         public ActionResult Browse(int categoryId)
         {
-            // Retrieve Category genre and its Associated associated Products products from database
-            var genreModel = db.Categories.Include("Products").Single(g => g.CategoryId == categoryId);
+            Category category = new Category();
+            category = RedisHelper.Get<Category>($"category-{categoryId}");
+            if (category == null)
+            {
+                category = db.Categories.Include("Products").Single(g => g.CategoryId == categoryId);
+                RedisHelper.Set($"category-{categoryId}", category);
+            }
 
-            return View(genreModel);
+            return View(category);
         }
-
+        [OutputCache(Duration = 500, VaryByParam = "id")]
         public ActionResult Details(int id)
         {
 
-            var productCacheKey = string.Format("product_{0}", id);
-            var product = MemoryCache.Default[productCacheKey] as Product;
+            var productCacheKey = $"product_{id}";
+            var product = RedisHelper.Get<Product>(productCacheKey);
             if (product == null)
             {
                 product = db.Products.Single(a => a.ProductId == id);
-                //Remove it from cache if not retrieved in last 10 minutes
-                MemoryCache.Default.Add(productCacheKey, product, new CacheItemPolicy { SlidingExpiration = TimeSpan.FromMinutes(10) });
+                RedisHelper.Set(productCacheKey, product);
             }
             var viewModel = new ProductViewModel
             {
@@ -56,6 +68,5 @@ namespace PartsUnlimited.Controllers
 
             return View(viewModel);
         }
-
     }
 }

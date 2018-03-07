@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.ModelBinding;
+using Microsoft.Azure.Search;
 using Newtonsoft.Json;
 
 namespace PartsUnlimited.Models
 {
+    [Serializable]
     public class Product
     {
+        [IsSearchable]
         [ScaffoldColumn(false)]
         public int ProductId { get; set; }
 

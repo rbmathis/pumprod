@@ -1,5 +1,5 @@
 ﻿//TODO Application Insights - Uncomment
-//using Microsoft.ApplicationInsights.Channel;
+using Microsoft.ApplicationInsights.Channel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +16,9 @@ namespace PartsUnlimited.Utils
             return typeof(PartsUnlimitedTelemetryInitializer).Assembly.GetName().Version.ToString();
         }
         //TODO Application Insights - Uncomment
-        //public void Initialize(ITelemetry telemetry)
-        //{
-        //    telemetry.Context.Component.Version = appVersion;
-        //}
+        public void Initialize(ITelemetry telemetry)
+        {
+            telemetry.Context.Component.Version = appVersion;
+        }
     }
 }
