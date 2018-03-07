@@ -367,6 +367,7 @@
     <Content Include="Connected Services\Application Insights\ConnectedService.json" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\migday1 - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\partsunlimited-vcurrent.pubxml" />
     <None Include="Properties\PublishProfiles\partsunlimitedcus07.pubxml" />
     <Content Include="Images\admin_icon.png" />
@@ -584,6 +585,7 @@
     <Compile Include="Utils\PartsUnlimitedTelemetryInitializer.cs" />
     <Compile Include="Utils\RaincheckQuery.cs" />
     <Compile Include="Utils\RedisHelper.cs" />
+    <Compile Include="Utils\SearchHelper.cs" />
     <Compile Include="Utils\SignalRDependencyResolver.cs" />
     <Compile Include="Utils\TelemetryProvider.cs" />
     <Compile Include="ViewModels\AlbumData.cs" />
