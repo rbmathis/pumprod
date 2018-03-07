@@ -143,8 +143,17 @@ namespace PartsUnlimited.Utils
             BinaryFormatter binaryFormatter = new BinaryFormatter();
             using (MemoryStream memoryStream = new MemoryStream(stream))
             {
-                T result = (T)binaryFormatter.Deserialize(memoryStream);
+                T result = default(T);
+                try
+                {
+                    result = (T)binaryFormatter.Deserialize(memoryStream);
+                }
+                catch(Exception ex)
+                {
+                    //eat it
+                }
                 return result;
+
             }
         }
     }
